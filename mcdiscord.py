@@ -31,9 +31,6 @@ server = MinecraftServer.lookup(MINECRAFT_SERVER)
 bot = commands.Bot(command_prefix='!')
 channel = None
 
-if MCDISCORD_DEBUG:
-    print("Status channel ID: {0}".format(STATUS_CHANNEL), file=sys.stderr)
-
 async def send_channel_message(channel, message):
     if channel is not None:
         await channel.send(message)
@@ -48,14 +45,16 @@ async def status_task():
     prev_players   = None
     prev_connected = False
 
-    if STATUS_CHANNEL is not None:
-        channel = await bot.fetch_channel(STATUS_CHANNEL)
+    if STATUS_CHANNEL is not None and len(STATUS_CHANNEL):
+        try:
+            channel = await bot.fetch_channel(STATUS_CHANNEL)
+        except:
+            print(f'ERROR: unable to find channel {STATUS_CHANNEL}')
+            channel = None
 
     if channel is not None:
         if MCDISCORD_DEBUG:
             print("DEBUG: got channel.", file=sys.stderr)
-    else:
-        print("ERROR: unable to get_channel.", file=sys.stderr)
 
     while True:
         try:
