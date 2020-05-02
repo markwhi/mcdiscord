@@ -13,13 +13,17 @@ load_dotenv(override=True)
 TOKEN            = os.getenv('DISCORD_TOKEN')
 STATUS_CHANNEL   = os.getenv('DISCORD_STATUS_CHANNEL')
 MINECRAFT_SERVER = os.getenv('MINECRAFT_SERVER')
-TICK_INTERVAL    = os.getenv('STATUS_INTERVAL_SECONDS', default=10)
+TICK_INTERVAL    = int(os.getenv('STATUS_INTERVAL_SECONDS', default=10))
 MCDISCORD_DEBUG  = os.getenv('MCDISCORD_DEBUG', default=False)
 
 if TOKEN is None or MINECRAFT_SERVER is None:
     print('Error: DISCORD_TOKEN and MINECRAFT_SERVER must be set.')
     print('Did you create an .env file?')
     sys.exit(-1)
+
+if TICK_INTERVAL == 0:
+    print('Error: STATUS_INTERVAL_SECONDS is invalid; defaulting to 10 seconds.')
+    TICK_INTERVAL=10
 
 if MCDISCORD_DEBUG:
     if str(MCDISCORD_DEBUG).lower() in ["off", "false", "0", "no"]:
